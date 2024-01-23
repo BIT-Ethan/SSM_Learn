@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace等于mapper接口类的全限定符,这样实现对应 -->
+<mapper namespace="com.atguigu.mapper.CustomerMapper">
+
+    <resultMap id="cMap" type="com.atguigu.pojo.Customer">
+
+        <id column="customer_id" property="customerId"/>
+
+<!--        <result column="customer_name" property="customerName"/>-->
+
+<!--        一对多用collection-->
+        <collection property="orders" ofType="com.atguigu.pojo.Order">
+            <id column="order_id" property="orderId"/>
+<!--            <result column="order_name" property="orderName"/>-->
+<!--            <result column="customer_id" property="customerId"/>-->
+        </collection>
+    </resultMap>
+
+    <select id="queryList" resultMap="cMap">
+        SELECT * FROM t_customer c JOIN t_order o
+        ON c.`customer_id` = o.`customer_id`
+    </select>
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace等于mapper接口类的全限定符,这样实现对应 -->
+<mapper namespace="com.atguigu.mapper.EmployeeMapper">
+    <!--
+        动态查询语句，可能传入的参数只有name而没有salary，此时仍有输出
+        if 标签：判断传入的参数，最后是否添加语句
+            test 属性：内部做比较运算，为true则将if标签内的sql语句拼接
+                                    false则不拼接
+        where 标签 替代sql语句中的where 防止sql语句错误
+    -->
+    <select id="query" resultType="com.atguigu.pojo.Employee">
+        select * from t_emp
+        <where>
+            <if test="name != null">
+                emp_name = #{name}
+            </if>
+            <if test="salary != null">
+                and emp_salary = #{salary}
+            </if>
+        </where>
+
+
+    </select>
+</mapper>

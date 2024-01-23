@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace等于mapper接口类的全限定符,这样实现对应 -->
+<mapper namespace="com.atguigu.mapper.EmployeeMapper">
+    <!--
+        #{ key }：占位符 + 赋值 两个步骤，emp_id = ?, ? = 赋值
+        ${ key }：字符串拼接 一个步骤，"emp_id = " + id
+
+        #{ key } 可以防止sql注入
+    -->
+    <select id="queryById" resultType="com.atguigu.pojo.Employee">
+        select emp_id empId, emp_name empName, emp_salary empSalary
+        from t_emp where emp_id = #{id}
+    </select>
+    <!--  场景1：传入单个简单类型（单值）  -->
+    <delete id="deleteById">
+        delete from t_emp where emp_id = #{id}
+    </delete>
+
+    <select id="queryBySalary" resultType="com.atguigu.pojo.Employee">
+        select emp_id empId, emp_name empName, emp_salary empSalary
+        from t_emp where emp_salary = #{salary}
+    </select>
+
+    <!--  场景2：传入实体对象 括号里写传入对象的成员变量名 -->
+    <insert id="insertEmp">
+        insert into t_emp(emp_name, emp_salary) values(#{empName}, #{empSalary})
+    </insert>
+
+    <!--
+        场景3：传入多个简单类型（单值）
+        key = @Param("values值")
+    -->
+    <select id="queryByNameAndSalary" resultType="com.atguigu.pojo.Employee">
+        select emp_id empId, emp_name empName, emp_salary empSalary
+        from t_emp where emp_name = #{name} and emp_salary = #{salary}
+    </select>
+
+    <!--  场景4：传入map key等于map的key即可-->
+    <insert id="insertEmpMap">
+        insert into t_emp(emp_name, emp_salary) values(#{name}, #{salary})
+    </insert>
+</mapper>

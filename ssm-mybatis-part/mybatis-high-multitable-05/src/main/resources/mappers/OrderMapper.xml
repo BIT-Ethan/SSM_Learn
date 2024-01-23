@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace等于mapper接口类的全限定符,这样实现对应 -->
+<mapper namespace="com.atguigu.mapper.OrderMapper">
+    <!--  自定义映射关系，定义嵌套对象映射关系  -->
+    <resultMap id="orderMap" type="com.atguigu.pojo.Order">
+        <!--    主键列    -->
+        <id column="order_id" property="orderId"/>
+
+        <!--   普通列     -->
+        <result column="order_name" property="orderName"/>
+        <result column="customer_id" property="customerId"/>
+
+        <!--   对象属性嵌套赋值     -->
+        <association property="customer" javaType="com.atguigu.pojo.Customer">
+            <id column="customer_id" property="customerId"/>
+            <result column="customer_name" property="customerName"/>
+        </association>
+    </resultMap>
+
+    <select id="selectOrderWithCustomer" resultMap="orderMap">
+        SELECT * FROM t_customer c JOIN t_order o
+        ON c.`customer_id` = o.`customer_id`
+        WHERE o.`order_id` = #{id}
+    </select>
+</mapper>

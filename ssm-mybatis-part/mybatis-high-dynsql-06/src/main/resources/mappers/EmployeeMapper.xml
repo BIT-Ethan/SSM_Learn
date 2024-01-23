@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace等于mapper接口类的全限定符,这样实现对应 -->
+<mapper namespace="com.atguigu.mapper.EmployeeMapper">
+    <!--
+        动态查询语句，可能传入的参数只有name而没有salary，此时仍有输出
+        if 标签：判断传入的参数，最后是否添加语句
+            test 属性：内部做比较运算，为true则将if标签内的sql语句拼接
+                                    false则不拼接
+        where 标签 替代sql语句中的where 防止sql语句错误
+    -->
+    <select id="query" resultType="com.atguigu.pojo.Employee">
+        select * from t_emp
+        <where>
+            <if test="name != null">
+                emp_name = #{name}
+            </if>
+            <if test="salary != null">
+                and emp_salary = #{salary}
+            </if>
+        </where>
+    </select>
+
+    <update id="update">
+        update t_emp
+        <set>
+            <if test="empName != null">
+                emp_name = #{empName},
+            </if>
+            <if test="emp_salary != null">
+                emp_salary = #{empSalary}
+            </if>
+        </set>
+        where emp_id = #{id}
+    </update>
+
+    <select id="queryBatch" resultType="com.atguigu.pojo.Employee">
+        select * from t_emp where emp_id in
+        <!--
+            遍历的数据 (1, 2, 3, 4)
+            collection = "ids | arg0 | list"
+            open 遍历之前要追加的字符串
+            close 遍历之后要添加的字符串
+            separator 每次遍历的分隔符 如果是最后一个数据，会自动不加分隔符
+            item 获取每个遍历项
+        -->
+        <foreach collection="ids" open="(" separator="," close=")" item="id">
+            #{id}
+        </foreach>
+    </select>
+
+    <delete id="deleteBatch">
+        delete from t_emp where emp_id in
+        <foreach collection="ids" open="(" separator="," close=")" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insertBatch">
+        insert into t_emp(emp_name, emp_salary) values
+        <foreach collection="employees" separator="," item="employee">
+            (#{employee.empName}, #{employee.empSalary})
+        </foreach>
+    </insert>
+
+    <update id="updateBatch">
+        <foreach collection="employees" item="employee">
+            update t_emp set emp_name = #{employee.empName}, emp_salary = #{employee.empSalary}
+            where emp_id = #{employee.empId}
+        </foreach>
+
+    </update>
+</mapper>

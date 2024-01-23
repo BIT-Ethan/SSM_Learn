@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- GAVP属性 -->
+    <!-- 不会改变 -->
+    <groupId>com.atguigu</groupId>
+    <artifactId>maven-pom-dependenies-04</artifactId>
+    <!-- 构建过程 - 部署 - 修改 -->
+    <version>1.0-SNAPSHOT</version>
+    <!-- maven工程打包方式 -->
+    <packaging>jar</packaging>
+
+    <!-- 声明版本号 -->
+    <properties>
+        <!--
+            声明一个全局变量，声明完后在其他的位置可以引用 ${jackson.version}
+            注意：声明的标签建议两层以上命名：技术名.version
+        -->
+        <jackson.version>2.16.0</jackson.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <!-- 第三方依赖信息声明
+        dependencies 项目依赖信息集合
+        dependency 每个依赖项
+        gav 依赖的信息，就是其他的maven工程 [jar]
+
+        注意：
+        1.提供版本号，统一管理，在properties中建立全局变量
+        2.可选属性 scope
+            scope 引入依赖的作用域
+            默认：compile，在main,test,打包和运行
+                test 只能在test中使用
+                runtime main和test都不行，只能打包和运行时使用，如反射
+                provided main和test使用，但打包和运行不行，如servlet
+    -->
+    <dependencies>
+
+<!--        <dependency>-->
+<!--            &lt;!&ndash; GAV属性 用插件查找 &ndash;&gt;-->
+<!--            <groupId>com.fasterxml.jackson.core</groupId>-->
+<!--            <artifactId>jackson-core</artifactId>-->
+<!--            <version>${jackson.version}</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
+
+        <!--
+            依赖传递：导入依赖，会自动导入依赖的依赖
+            好处：简化依赖的导入，确保依赖之间的版本无冲突
+            如，jackson-databind依赖于jackson-core和jackson-annotations
+            因此只需要导入jackson-databind即可自动导入它的依赖
+
+            依赖冲突：发现有重复依赖，会终止后续的所有依赖传递，避免循环依赖
+            第一原则：谁短谁优先 引用的路径长度
+                A - C - B1.0
+                F - B2.0
+                最后得到 A, C, F, B2.0
+            第二原则：相同长度，则谁上谁优先，在dependencies中声明的先后顺序
+                A - B1.0
+                F - B2.0
+                则最后得到 A, F, B1.0
+        -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+</project>
